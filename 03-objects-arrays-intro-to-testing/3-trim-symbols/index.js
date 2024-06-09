@@ -8,12 +8,15 @@ export function trimSymbols(string, size) {
   if (size === 0) return '';
   if (!size || string.length === 0) return string;
 
+  let newString = '';
   let accumulator = 1;
-  return string.split('').map((letter, index, array) => {
-    if (letter !== array[index + 1]) { accumulator = 1; return letter; }
-    if (letter === array[index + 1] && accumulator >= size) return '';
-      
-    accumulator++;
-    return letter;
-  }).join('');
+
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] === string[i + 1] && accumulator >= size) continue;
+
+    string[i] !== string[i + 1] ? accumulator = 1 : accumulator++;
+    newString += string[i]; 
+  }
+
+  return newString;
 }
