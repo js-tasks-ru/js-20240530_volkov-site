@@ -38,7 +38,7 @@ export default class NotificationMessage {
     const content = wrapper ? wrapper.append(this.element) : this.element;
 
     this.renderNotification(content);
-    this.auto_destroy();
+    this.timerId = setTimeout(() => this.destroy(), this.duration);
   }
 
   remove() {
@@ -46,11 +46,8 @@ export default class NotificationMessage {
   }
 
   destroy() {
+    clearTimeout(this.timerId);
     this.remove();
     NotificationMessage.activeNotification = null;
-  }
-
-  auto_destroy() {
-    setTimeout(() => { this.destroy() }, this.duration);
   }
 }
