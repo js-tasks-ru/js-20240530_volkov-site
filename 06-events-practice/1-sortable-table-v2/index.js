@@ -3,7 +3,6 @@ import SortableTable from '../../05-dom-document-loading/2-sortable-table-v1/ind
 export default class SortableTableV2 extends SortableTable {
   constructor(headersConfig, { data = [], sorted = {} } = {}) {
     super(headersConfig, data);
-    this.dataElementHeader = this.element.querySelector("div[data-element='header']");
     this.sorted = sorted;
     this.arrowNodeElement = null;
 
@@ -14,21 +13,21 @@ export default class SortableTableV2 extends SortableTable {
   handleColumnClick = (e) => {
     e.preventDefault();
 
-    const column = e.target.closest('[data-sortable="true"]');
-    if (!column) return;
+    const columnElement = e.target.closest('[data-sortable="true"]');
+    if (!columnElement) return;
 
-    column.dataset.order = column.dataset.order === 'desc' ? 'asc' : 'desc';
-    if (!column.querySelector('[data-element="arrow"]')) column.append(this.arrowNodeElement);
+    columnElement.dataset.order = columnElement.dataset.order === 'desc' ? 'asc' : 'desc';
+    if (!columnElement.querySelector('[data-element="arrow"]')) columnElement.append(this.arrowNodeElement);
 
-    this.sort(column.dataset.id, column.dataset.order);
+    this.sort(columnElement.dataset.id, columnElement.dataset.order);
   }
 
   createEventListeners() {  
-    this.dataElementHeader.addEventListener('pointerdown', this.handleColumnClick);
+    this.subElements.header.addEventListener('pointerdown', this.handleColumnClick);
   }
 
   removeEventListeners() {
-    this.dataElementHeader.removeEventListener('pointerdown', this.handleColumnClick);
+    this.subElements.header.removeEventListener('pointerdown', this.handleColumnClick);
   }
 
   createSortingArrow() {
