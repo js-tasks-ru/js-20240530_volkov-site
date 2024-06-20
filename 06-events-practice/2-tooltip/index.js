@@ -33,7 +33,7 @@ class Tooltip {
   }
 
   handlePointerMoveEvent = (e) => {
-    if (this.element) {
+    if (this.element && this.isTooltipElement(e)) {
       this.element.style.left = e.clientX + 10 + 'px';
       this.element.style.top = e.clientY + 10 + 'px';
     }
