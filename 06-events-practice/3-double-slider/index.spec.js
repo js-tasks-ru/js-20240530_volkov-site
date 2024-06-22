@@ -85,6 +85,7 @@ describe('events-practice/double-slider', () => {
 
     leftSlider.dispatchEvent(down);
     leftSlider.dispatchEvent(move);
+
     expect(leftBoundary).toHaveTextContent(doubleSlider.min);
   });
 
