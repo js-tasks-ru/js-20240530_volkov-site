@@ -39,10 +39,10 @@ export default class DoubleSlider {
 
     this.autoUp(this.rightThumb);
 
-    let shiftX = event.clientX - this.leftThumb.getBoundingClientRect().left;
+    const shiftX = event.clientX - this.leftThumb.getBoundingClientRect().left;
 
     const onMouseMoveLeftThumb = (event) => {
-      let newLeft = event.clientX - shiftX - this.slider.getBoundingClientRect().left;
+      const newLeft = event.clientX - shiftX - this.slider.getBoundingClientRect().left;
       let newLeftPercent = newLeft / this.slider.getBoundingClientRect().width * 100;
 
       if (newLeftPercent > (100 - this.rightBoundary)) {
@@ -74,10 +74,10 @@ export default class DoubleSlider {
 
     this.autoUp(this.leftThumb);
     
-    let shiftX = this.rightThumb.getBoundingClientRect().right - event.clientX;
+    const shiftX = this.rightThumb.getBoundingClientRect().right - event.clientX;
 
     const onMouseMoveRightThumb  = (event) => {
-      let newRight = this.slider.getBoundingClientRect().right - event.clientX - shiftX;
+      const newRight = this.slider.getBoundingClientRect().right - event.clientX - shiftX;
       let newRightPercent = newRight / this.slider.getBoundingClientRect().width * 100;
 
       if (newRightPercent > (100 - this.leftBoundary)) {
@@ -129,7 +129,7 @@ export default class DoubleSlider {
   }
 
   rightThumbPositionCalculation() {
-    let basePercent = (this.to - this.min) / this.range * 100;
+    const basePercent = (this.to - this.min) / this.range * 100;
     return 100 - basePercent;
   }
 
