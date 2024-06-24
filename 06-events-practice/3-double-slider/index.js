@@ -27,13 +27,21 @@ export default class DoubleSlider {
     this.rightThumb.addEventListener('pointerdown', this.onMouseDownRightThumb);
   }
 
+  autoUp(nodeElement) {
+    const up = new MouseEvent('pointerup', {
+      bubbles: true
+    });
+    nodeElement.dispatchEvent(up);
+  }
+
   onMouseDownLeftThumb = (event) => {
     event.preventDefault();
+
+    this.autoUp(this.rightThumb);
 
     let shiftX = event.clientX - this.leftThumb.getBoundingClientRect().left;
 
     const onMouseMoveLeftThumb = (event) => {
-      debugger;
       let newLeft = event.clientX - shiftX - this.slider.getBoundingClientRect().left;
       let newLeftPercent = newLeft / this.slider.getBoundingClientRect().width * 100;
 
@@ -63,6 +71,9 @@ export default class DoubleSlider {
 
   onMouseDownRightThumb = (event) => {
     event.preventDefault();
+
+    this.autoUp(this.leftThumb);
+    
     let shiftX = this.rightThumb.getBoundingClientRect().right - event.clientX;
 
     const onMouseMoveRightThumb  = (event) => {
