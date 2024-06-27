@@ -21,8 +21,11 @@ export default class ColumnChartV2 extends ColumnChart {
   }
 
   async getData() {
-    const params = new URLSearchParams({from: this.range.from.toISOString(), to: this.range.to.toISOString()});
-    const data = await fetchJson(`${BACKEND_URL}/${this.url}?${params.toString()}`);
+    const url = new URL(this.url, BACKEND_URL)
+    url.searchParams.from = this.range.from.toISOString();
+    url.searchParams.to = this.range.to.toISOString();
+
+    const data = await fetchJson(url);
 
     return data;
   }
