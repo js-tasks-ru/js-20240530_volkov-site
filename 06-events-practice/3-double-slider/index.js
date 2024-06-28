@@ -23,85 +23,60 @@ export default class DoubleSlider {
     this.leftThumb.ondragstart = () => false;
     this.rightThumb.ondragstart = () => false;
 
-    this.leftThumb.addEventListener('pointerdown', this.onMouseDownLeftThumb);
-    this.rightThumb.addEventListener('pointerdown', this.onMouseDownRightThumb);
+    this.leftThumb.addEventListener('pointerdown', this.pointerDownHandler);
+    this.rightThumb.addEventListener('pointerdown', this.pointerDownHandler);
   }
 
-  autoUp(nodeElement) {
-    const up = new MouseEvent('pointerup', {
-      bubbles: true
-    });
-    nodeElement.dispatchEvent(up);
-  }
-
-  onMouseDownLeftThumb = (event) => {
+  pointerDownHandler = (event) => {
     event.preventDefault();
 
-    this.autoUp(this.rightThumb);
+    this.shiftX = event.target === this.leftThumb
+      ? event.clientX - this.leftThumb.getBoundingClientRect().left
+      : this.rightThumb.getBoundingClientRect().right - event.clientX;
 
-    const shiftX = event.clientX - this.leftThumb.getBoundingClientRect().left;
+    this.modificator = event.target === this.leftThumb ? 'left' : 'right';
 
-    const onMouseMoveLeftThumb = (event) => {
-      const newLeft = event.clientX - shiftX - this.slider.getBoundingClientRect().left;
-      let newLeftPercent = newLeft / this.slider.getBoundingClientRect().width * 100;
+    const onMouseMoveHandler = (event) => {
+      let thumbPosition;
 
-      if (newLeftPercent > (100 - this.rightBoundary)) {
-        newLeftPercent = 100 - this.rightBoundary;
-      } else if (newLeftPercent < 0) {
-        newLeftPercent = 0;
+      thumbPosition = this.modificator === 'left'
+        ? event.clientX - this.shiftX - this.slider.getBoundingClientRect().left
+        : this.slider.getBoundingClientRect().right - event.clientX - this.shiftX;
+
+      let newPercent = thumbPosition / this.slider.getBoundingClientRect().width * 100;
+
+      const inversedMod = this.modificator === 'left' ? 'right' : 'left'; 
+      if (newPercent > (100 - this[`${inversedMod}Boundary`])) {
+        newPercent = 100 - this[`${inversedMod}Boundary`];
+      } else if (newPercent < 0) {
+        newPercent = 0;
       }
 
-      this.leftBoundary = newLeftPercent;
-      this.leftThumb.style.left = newLeftPercent + '%';
-      this.sliderProgress.style.left = newLeftPercent + '%';
-      this.from = Math.round(this.min + newLeftPercent / 100 * this.range);
-      this.element.querySelector('[data-element="from"]').textContent = this.formatValue(this.from);
-    };
+      this[`${this.modificator}Boundary`] = newPercent;
+      this[`${this.modificator}Thumb`].style[this.modificator] = newPercent + '%';
+      this.sliderProgress.style[this.modificator] = newPercent + '%';
 
-    const onMouseUpLeftThumb = () => {
-      document.removeEventListener('pointermove', onMouseMoveLeftThumb);
-      document.removeEventListener('pointerup', onMouseUpLeftThumb);
+      if (this.modificator === 'left') {
+        this.from = Math.round(this.min + newPercent / 100 * this.range);
+        this.element.querySelector('[data-element="from"]').textContent = this.formatValue(this.from);
+      } else {
+        this.to = Math.round(this.max - newPercent / 100 * this.range);
+        this.element.querySelector('[data-element="to"]').textContent = this.formatValue(this.to);
+      }
+    }
+
+    const onMouseMove = (event) => onMouseMoveHandler(event);
+
+    const onMouseUp = () => {
+      document.removeEventListener('pointermove', onMouseMove);
+      document.removeEventListener('pointerup', onMouseUp);
 
       this.dispatchEvent();
     };
 
-    document.addEventListener('pointermove', onMouseMoveLeftThumb);
-    document.addEventListener('pointerup', onMouseUpLeftThumb);
-  };
-
-  onMouseDownRightThumb = (event) => {
-    event.preventDefault();
-
-    this.autoUp(this.leftThumb);
-    
-    const shiftX = this.rightThumb.getBoundingClientRect().right - event.clientX;
-
-    const onMouseMoveRightThumb  = (event) => {
-      const newRight = this.slider.getBoundingClientRect().right - event.clientX - shiftX;
-      let newRightPercent = newRight / this.slider.getBoundingClientRect().width * 100;
-
-      if (newRightPercent > (100 - this.leftBoundary)) {
-        newRightPercent = 100 - this.leftBoundary;
-      } else if (newRightPercent < 0) {
-        newRightPercent = 0;
-      }
-
-      this.rightBoundary = newRightPercent;
-      this.rightThumb.style.right = newRightPercent + '%';
-      this.sliderProgress.style.right = newRightPercent + '%';
-      this.to = Math.round(this.max - newRightPercent / 100 * this.range);
-      this.element.querySelector('[data-element="to"]').textContent = this.formatValue(this.to);
-    };
-
-    const onMouseUpRightThumb  = () => {
-      document.removeEventListener('pointermove', onMouseMoveRightThumb );
-      document.removeEventListener('pointerup', onMouseUpRightThumb );
-      this.dispatchEvent();
-    };
-
-    document.addEventListener('pointermove', onMouseMoveRightThumb );
-    document.addEventListener('pointerup', onMouseUpRightThumb );
-  };
+    document.addEventListener('pointermove', onMouseMove);
+    document.addEventListener('pointerup', onMouseUp);
+  }
 
   createTemplateElement() {
     return(`
@@ -143,8 +118,8 @@ export default class DoubleSlider {
   }
 
   removeEventListeners() {
-    this.leftThumb.removeEventListener('pointerdown', this.onMouseDownLeftThumb);
-    this.rightThumb.removeEventListener('pointerdown', this.onMouseDownRightThumb);
+    this.leftThumb.removeEventListener('pointerdown', this.pointerDownHandler);
+    this.rightThumb.removeEventListener('pointerdown', this.pointerDownHandler);
   }
 
   remove() {
