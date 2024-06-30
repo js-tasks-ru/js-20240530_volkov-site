@@ -22,7 +22,7 @@ export default class SortableTable {
   }
 
   createDataColumn(config, item) {
-    if (config.template) return config.template(item);
+    if (config.template) return config.template(item.images);
 
     return `<div class="sortable-table__cell">${item[config.id]}</div>`
   }
@@ -46,18 +46,15 @@ export default class SortableTable {
   createTableBody() {
     if (this.data.length === 0) return this.createTableEmptySection();
 
-    return(`
-      <div data-element="body" class="sortable-table__body">
-        ${this.data.map(item => this.createTableItem(item)).join('')}
-      </div>`
-    )
+    return this.data.map(item => this.createTableItem(item)).join('');
   }
 
   createTable() {
     return(`
         ${this.createTableHeader()}
-        ${this.createTableBody()}
-      `
+        <div data-element="body" class="sortable-table__body">
+          ${this.createTableBody()}
+        </div>`
     )
   }
 
