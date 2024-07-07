@@ -240,10 +240,10 @@ export default class ProductForm {
     return this.element;
   }
 
-  submitFormHandler(event) {
+  async submitFormHandler(event) {
     event.preventDefault();
 
-    this.onSubmit();
+    await this.onSubmit();
   }
 
   formElementChangeHandler(event) {
@@ -252,22 +252,13 @@ export default class ProductForm {
     this.editableData[element.name] = escapeHtml(element.value);
   }
 
-  onSubmit() {
-    this.pushProductData();
-    if (this.productId) { 
-      this.update();
-    } else {
+  async onSubmit() {
+    try {
+      await this.pushProductData();
       this.save();
+    } catch (error) {
+      console.error(error);
     }
-  }
-
-  update() {
-    const productUpdatedEvent = new CustomEvent('product-updated', {
-      bubbles: true,
-      detail: this.editableData
-    });
-
-    this.element.dispatchEvent(productUpdatedEvent);
   }
 
   save() {
