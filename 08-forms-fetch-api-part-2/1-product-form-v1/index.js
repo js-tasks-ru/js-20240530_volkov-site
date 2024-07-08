@@ -92,20 +92,20 @@ export default class ProductForm {
   createFormTemplate() {
     return(`
       <form data-element="productForm" class="form-grid">
-          ${this.createProductTitleElement()}
-          ${this.createProductDescriptionElement()}
-          ${this.createProductPhotosListElement()}
-          ${this.createProductCategoryElement()}
-          ${this.createProductPricesElement()}
-          ${this.createProductQuantityElement()}
-          ${this.createProductStatusElement()}
-          ${this.createFormSubmitElement()}
+          ${this.createProductTitleTemplate()}
+          ${this.createProductDescriptionTemplate()}
+          ${this.createProductPhotosListTemplate()}
+          ${this.createProductCategoryTemplate()}
+          ${this.createProductPricesTemplate()}
+          ${this.createProductQuantityTemplate()}
+          ${this.createProductStatusTemplate()}
+          ${this.createFormSubmitTemplate()}
       </form>
       `
     )
   }
 
-  createProductTitleElement() {
+  createProductTitleTemplate() {
     return(`
         <div class="form-group form-group__half_left">
           <fieldset>
@@ -116,7 +116,7 @@ export default class ProductForm {
       )
   }
 
-  createProductDescriptionElement() {
+  createProductDescriptionTemplate() {
     return(`
       <div class="form-group form-group__wide">
         <label class="form-label">Описание</label>
@@ -142,7 +142,7 @@ export default class ProductForm {
     )
   }
 
-  createProductPhotosListElement() {
+  createProductPhotosListTemplate() {
     return(`
         <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
@@ -166,7 +166,7 @@ export default class ProductForm {
     container.innerHTML = imagesList;
   }
 
-  createProductCategoryElement() {
+  createProductCategoryTemplate() {
     return(`
       <div class="form-group form-group__half_left">
         <label class="form-label">Категория</label>
@@ -176,7 +176,7 @@ export default class ProductForm {
     )
   }
 
-  createProductPricesElement() {
+  createProductPricesTemplate() {
     return(`
       <div class="form-group form-group__half_left form-group__two-col">
         <fieldset>
@@ -191,7 +191,7 @@ export default class ProductForm {
     )
   }
 
-  createProductQuantityElement() {
+  createProductQuantityTemplate() {
     return(`
       <div class="form-group form-group__part-half">
         <label class="form-label">Количество</label>
@@ -200,7 +200,7 @@ export default class ProductForm {
     )
   }
 
-  createProductStatusElement() {
+  createProductStatusTemplate() {
     return(`
       <div class="form-group form-group__part-half">
         <label class="form-label">Статус</label>
@@ -212,7 +212,7 @@ export default class ProductForm {
     )
   }
 
-  createFormSubmitElement() {
+  createFormSubmitTemplate() {
     return(`
       <div class="form-buttons">
         <button type="submit" name="save" class="button-primary-outline">
