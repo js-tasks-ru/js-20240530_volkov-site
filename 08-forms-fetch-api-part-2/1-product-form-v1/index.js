@@ -8,16 +8,18 @@ export default class ProductForm {
   constructor (productId) {
     this.productId = productId || null;
     this.editableData = {};
+    this._submitFormHandler = this.submitFormHandler.bind(this);
+    this._formElementChangeHandler = this.formElementChangeHandler.bind(this);
   }
 
   createEventListeners() {
-    this.subElements.productForm.addEventListener('submit', this.submitFormHandler.bind(this));
-    this.subElements.productForm.addEventListener('change', this.formElementChangeHandler.bind(this));
+    this.subElements.productForm.addEventListener('submit', this._submitFormHandler);
+    this.subElements.productForm.addEventListener('change', this._formElementChangeHandler);
   }
 
   removeEventListeners() {
-    this.subElements.productForm.removeEventListener('submit', this.submitFormHandler.bind(this));
-    this.subElements.productForm.removeEventListener('change', this.formElementChangeHandler.bind(this));
+    this.subElements.productForm.removeEventListener('submit', this._submitFormHandler);
+    this.subElements.productForm.removeEventListener('change', this._formElementChangeHandler);
   }
 
   async fetchCategories() {
