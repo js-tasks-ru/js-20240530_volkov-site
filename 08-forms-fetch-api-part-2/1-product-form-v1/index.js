@@ -11,12 +11,13 @@ export default class ProductForm {
   }
 
   createEventListeners() {
-    this.subElements.productForm.addEventListener('submit', (event) => this.submitFormHandler(event));
-    this.subElements.productForm.addEventListener('change', (event) => this.formElementChangeHandler(event));
+    this.subElements.productForm.addEventListener('submit', this.submitFormHandler.bind(this));
+    this.subElements.productForm.addEventListener('change', this.formElementChangeHandler.bind(this));
   }
 
   removeEventListeners() {
-    this.subElements.productForm.removeEventListener('change', (event) => this.formElementChangeHandler(event));
+    this.subElements.productForm.removeEventListener('submit', this.submitFormHandler.bind(this));
+    this.subElements.productForm.removeEventListener('change', this.formElementChangeHandler.bind(this));
   }
 
   async fetchCategories() {
@@ -51,7 +52,7 @@ export default class ProductForm {
     const { productForm } = this.subElements;
     await this.fetchProductData();
 
-    for (let key in this.editableData) {
+    for (const key in this.editableData) {
       if (key === 'images') { this.fillImages(productForm); continue; }
 
       const element = productForm.querySelector(`[name="${key}"]`);
@@ -81,12 +82,12 @@ export default class ProductForm {
   createTemplate() {
     return(`
       <div class="product-form">
-        ${this.createFormElement()}
+        ${this.createFormTemplate()}
       </div>`
     )
   }
 
-  createFormElement() {
+  createFormTemplate() {
     return(`
       <form data-element="productForm" class="form-grid">
           ${this.createProductTitleElement()}
@@ -275,7 +276,7 @@ export default class ProductForm {
   }
 
   destroy() {
-    this.removeEventListeners()
+    this.removeEventListeners();
     this.remove();
   }
 }
